@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive SOAP Rubric</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        .rubric-panel {
+            background: white;
+            border-right: 2px solid #ddd;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .soap-panel {
+            background: white;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .rubric-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .rubric-item:hover {
+            background: #ecf0f1;
+            border-left-color: #3498db;
+        }
+
+        .rubric-item.active {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff59d !important;
+            padding: 2px 4px;
+            border-radius: 3px;
+            animation: pulse 0.5s;
+            box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { background: #fff59d; }
+            50% { background: #ffeb3b; }
+            100% { background: #fff59d; }
+        }
+
+        .soap-section {
+            margin: 30px 0;
+        }
+
+        .patient-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .section-divider {
+            border-top: 3px solid #e0e0e0;
+            margin: 30px 0;
+        }
+
+        .rubric-category {
+            margin-bottom: 30px;
+        }
+
+        .category-header {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px -20px 15px -20px;
+            font-size: 18px;
+            font-weight: 600;
+            position: sticky;
+            top: 54px;
+            z-index: 5;
+        }
+
+        .rubric-number {
+            display: inline-block;
+            width: 30px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Rubric Panel -->
+        <div class="rubric-panel">
+            <h1>SOAP Rubric</h1>
+
+            <div class="rubric-category">
+                <div class="category-header">Subjective</div>
+                <div class="rubric-item" data-target="s1"><span class="rubric-number">1.</span> State the chief complaint</div>
+                <div class="rubric-item" data-target="s2"><span class="rubric-number">2.</span> Construct a coherent HPI narrative</div>
+                <div class="rubric-item" data-target="s3"><span class="rubric-number">3.</span> Document the onset of symptoms</div>
+                <div class="rubric-item" data-target="s4"><span class="rubric-number">4.</span> Document provoking and palliating factors</div>
+                <div class="rubric-item" data-target="s5"><span class="rubric-number">5.</span> Characterize the quality of symptoms</div>
+                <div class="rubric-item" data-target="s6"><span class="rubric-number">6.</span> Document the region and radiation of symptoms</div>
+                <div class="rubric-item" data-target="s7"><span class="rubric-number">7.</span> Document the severity of symptoms</div>
+                <div class="rubric-item" data-target="s8"><span class="rubric-number">8.</span> Document the timing and duration of symptoms</div>
+                <div class="rubric-item" data-target="s20"><span class="rubric-number">9.</span> Document pertinent positives and pertinent negatives</div>
+                <div class="rubric-item" data-target="s19"><span class="rubric-number">10.</span> Document at least 3 organ systems for ROS</div>
+                <div class="rubric-item" data-target="s20"><span class="rubric-number">11.</span> Include clinically relevant ROS findings</div>
+                <div class="rubric-item" data-target="s9"><span class="rubric-number">12.</span> Document surgical history</div>
+                <div class="rubric-item" data-target="s10"><span class="rubric-number">13.</span> Document allergies</div>
+                <div class="rubric-item" data-target="s12"><span class="rubric-number">14.</span> Document current medications</div>
+                <div class="rubric-item" data-target="s13"><span class="rubric-number">15.</span> Document past medical history</div>
+                <div class="rubric-item" data-target="s14"><span class="rubric-number">16.</span> Document relevant lifestyle factors</div>
+                <div class="rubric-item" data-target="s15"><span class="rubric-number">17.</span> Document tobacco use status</div>
+                <div class="rubric-item" data-target="s16"><span class="rubric-number">18.</span> Document alcohol use</div>
+                <div class="rubric-item" data-target="s17"><span class="rubric-number">19.</span> Document drug use</div>
+                <div class="rubric-item" data-target="s18"><span class="rubric-number">20.</span> Document sexual history when relevant</div>
+                <div class="rubric-item" data-target="s21"><span class="rubric-number">21.</span> Document family history</div>
+                <div class="rubric-item" data-target="s11"><span class="rubric-number">22.</span> Include relevant immunization status</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Objective</div>
+                <div class="rubric-item" data-target="o1"><span class="rubric-number">1.</span> Document at least 3 vital signs</div>
+                <div class="rubric-item" data-target="o2"><span class="rubric-number">2.</span> Include plausible and consistent vital sign values</div>
+                <div class="rubric-item" data-target="o3"><span class="rubric-number">3.</span> Document patient's overall appearance and distress level</div>
+                <div class="rubric-item" data-target="o4"><span class="rubric-number">4.</span> Document exam techniques appropriate to chief complaint</div>
+                <div class="rubric-item" data-target="o5"><span class="rubric-number">5.</span> Include systematic examination approach</div>
+                <div class="rubric-item" data-target="o6"><span class="rubric-number">6.</span> Document specific physical exam findings</div>
+                <div class="rubric-item" data-target="o7"><span class="rubric-number">7.</span> Document pertinent negative findings</div>
+                <div class="rubric-item" data-target="o8"><span class="rubric-number">8.</span> Document special maneuvers or tests</div>
+                <div class="rubric-item" data-target="o9"><span class="rubric-number">9.</span> Include exam findings that integrate with history</div>
+                <div class="rubric-item" data-target="o10"><span class="rubric-number">10.</span> Document general examination findings</div>
+                <div class="rubric-item" data-target="o11"><span class="rubric-number">11.</span> Document HEENT examination findings</div>
+                <div class="rubric-item" data-target="o12"><span class="rubric-number">12.</span> Document cardiac examination findings</div>
+                <div class="rubric-item" data-target="o13"><span class="rubric-number">13.</span> Document pulmonary examination findings</div>
+                <div class="rubric-item" data-target="o14"><span class="rubric-number">14.</span> Document abdominal examination findings</div>
+                <div class="rubric-item" data-target="o15"><span class="rubric-number">15.</span> Document neurological examination findings</div>
+                <div class="rubric-item" data-target="o16"><span class="rubric-number">16.</span> Document skin examination findings</div>
+                <div class="rubric-item" data-target="o17"><span class="rubric-number">17.</span> Document musculoskeletal examination findings</div>
+                <div class="rubric-item" data-target="o18"><span class="rubric-number">18.</span> Document psychiatric screening</div>
+                <div class="rubric-item" data-target="o19"><span class="rubric-number">19.</span> Document relevant laboratory results</div>
+                <div class="rubric-item" data-target="o20"><span class="rubric-number">20.</span> Document relevant imaging findings</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Assessment and Plan</div>
+                <div class="rubric-item" data-target="a1"><span class="rubric-number">1.</span> Include synthesis of key history and physical findings</div>
+                <div class="rubric-item" data-target="a2"><span class="rubric-number">2.</span> Include clear problem statement</div>
+                <div class="rubric-item" data-target="a3"><span class="rubric-number">3.</span> Include explicit clinical reasoning</div>
+                <div class="rubric-item" data-target="a4"><span class="rubric-number">4.</span> Reference specific objective data points</div>
+                <div class="rubric-item" data-target="a5"><span class="rubric-number">5.</span> Document the most likely diagnosis</div>
+                <div class="rubric-item" data-target="a6"><span class="rubric-number">6.</span> Document at least one alternative diagnosis</div>
+                <div class="rubric-item" data-target="a7"><span class="rubric-number">7.</span> Document unlikely diagnoses when appropriate</div>
+                <div class="rubric-item" data-target="a8"><span class="rubric-number">8.</span> Document critical must-rule-out diagnoses</div>
+                <div class="rubric-item" data-target="a9"><span class="rubric-number">9.</span> Document at least one active problem clearly</div>
+                <div class="rubric-item" data-target="a10"><span class="rubric-number">10.</span> Document quantifiable measurements</div>
+                <div class="rubric-item" data-target="a11"><span class="rubric-number">11.</span> Include problem-specific assessment</div>
+                <div class="rubric-item" data-target="a12"><span class="rubric-number">12.</span> Include specific, actionable treatment plans</div>
+                <div class="rubric-item" data-target="a13"><span class="rubric-number">13.</span> Document patient education provided</div>
+                <div class="rubric-item" data-target="a14"><span class="rubric-number">14.</span> Document return precautions</div>
+                <div class="rubric-item" data-target="a15"><span class="rubric-number">15.</span> Document follow-up timeframe</div>
+                <div class="rubric-item" data-target="a16"><span class="rubric-number">16.</span> Document monitoring plan for treatment response</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Overall Documentation Quality</div>
+                <div class="rubric-item" data-target="q1"><span class="rubric-number">1.</span> Ensure internal consistency with logical alignment between all sections</div>
+                <div class="rubric-item" data-target="q2"><span class="rubric-number">2.</span> Include all core SOAP sections (Subjective, Objective, Assessment, and Plan)</div>
+                <div class="rubric-item" data-target="q3"><span class="rubric-number">3.</span> Demonstrate clinical reasoning with logical connection between findings and conclusions</div>
+                <div class="rubric-item" data-target="q4"><span class="rubric-number">4.</span> Maintain professional quality with appropriate medical terminology and organization</div>
+            </div>
+        </div>
+
+        <!-- SOAP Note Panel -->
+        <div class="soap-panel">
+            <h1>Sample SOAP Note</h1>
+
+            <div class="patient-info">
+                <div><strong>Patient:</strong> Daniel Ramirez</div>
+                <div><strong>Age/Sex:</strong> 16-year-old Male</div>
+                <div><strong>Date:</strong> 2025-12-31</div>
+                <div id="s1"><strong>Chief Complaint:</strong> "I've had these pimples on my face for a few months now and they won't go away. It's really embarrassing."</div>
+            </div>
+
+            <div class="soap-section">
+                <h2>SUBJECTIVE</h2>
+
+                <h3>History of Present Illness</h3>
+                <p id="s2">16-year-old healthy male presents with a <span id="s3">6-month history of progressive facial acne. Breakouts began around age 15</span>, initially mild but have gradually worsened despite <span id="s4">OTC treatment with benzoyl peroxide wash and salicylic acid pads</span>. He describes <span id="s5">pimples with some having white tops, some red bumps, and occasional larger painful bumps under the skin</span>. Acne is primarily on his <span id="s6">face (forehead, cheeks, chin) with some spots on upper back</span>. He is increasingly distressed about his appearance, <span id="s7">rating embarrassment as 7/10</span>, and has declined social events including a school dance.</p>
+
+                <h3>OPQRST</h3>
+                <ul>
+                    <li><strong>O - Onset:</strong> <span id="s3-detail">Started approximately 6 months ago, around age 15-16; gradual onset</span></li>
+                    <li><strong>P - Provocation/Palliation:</strong> <span id="s4-detail">Worse with stress (especially during exams) and sweating from basketball; tried OTC benzoyl peroxide wash 2x/day and salicylic acid pads with minimal improvement</span></li>
+                    <li><strong>Q - Quality:</strong> <span id="s5-detail">"Pimples" - some with white tops, some red bumps, occasional larger painful bumps under the skin</span></li>
+                    <li><strong>R - Region/Radiation:</strong> <span id="s6-detail">Face (forehead, cheeks, chin) and upper back; no spread to other areas</span></li>
+                    <li><strong>S - Severity:</strong> <span id="s7-detail">Embarrassment 7/10; significantly affecting social interactions and self-esteem</span></li>
+                    <li><strong>T - Timing:</strong> <span id="s8">Gradually worsening over past few months; constant presence with intermittent flares during stress</span></li>
+                    <li><strong>Pertinent Positives:</strong> <span id="s20">Worsening with stress and sweating, occasional picking at lesions, family history of paternal teenage acne, failed OTC therapy, psychosocial impact</span></li>
+                    <li><strong>Pertinent Negatives:</strong> <span id="s20-neg">No new medications, no supplement or steroid use, no signs of systemic illness, no depression or suicidal ideation</span></li>
+                </ul>
+
+                <h3>Review of Systems</h3>
+                <ul id="s19">
+                    <li><strong>Constitutional:</strong> Denies fever, weight changes, fatigue</li>
+                    <li><strong>Skin:</strong> Facial breakouts as described; no rashes elsewhere; no hair loss</li>
+                    <li><strong>Psychiatric:</strong> Reports embarrassment and self-consciousness; denies depression, anxiety, or suicidal ideation</li>
+                    <li><strong>Endocrine:</strong> No excessive sweating, no heat/cold intolerance</li>
+                </ul>
+
+                <h3>SAMPLES</h3>
+                <ul>
+                    <li><strong>S - Surgical History:</strong> <span id="s9">None</span></li>
+                    <li><strong>A - Allergies:</strong> <span id="s10">NKDA</span></li>
+                    <li><strong>M - Medications:</strong> <span id="s12">None; no supplements or steroids</span></li>
+                    <li><strong>P - Past Medical History:</strong> <span id="s13">None; no history of eczema or atopic conditions</span></li>
+                    <li><strong>L - Lifestyle/Last Oral Intake:</strong> <span id="s14">Active, plays basketball; washes face 2x/day; admits to occasionally picking at lesions</span></li>
+                    <li><strong>E - Events Leading to Presentation:</strong> Worsening acne despite OTC treatments; upcoming school dance causing increased concern about appearance</li>
+                    <li><strong>S - Social History:</strong>
+                        <ul>
+                            <li>Tobacco: <span id="s15">Denies</span></li>
+                            <li>Alcohol: <span id="s16">Denies</span></li>
+                            <li>Drugs: <span id="s17">Denies</span></li>
+                            <li>Sexual History: <span id="s18">Not obtained (not clinically relevant)</span></li>
+                            <li>Social Determinants: Lives with both parents; 10th grade student; good academic performance but stressed about upcoming tests; significant psychosocial impact - avoids eye contact, declined school dance invitation, spending more time alone</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p><strong>Family History:</strong> <span id="s21">Father had moderate acne as teenager that improved in his 20s; no family history of severe/scarring acne or hormonal disorders</span></p>
+
+                <p><strong>Immunizations:</strong> <span id="s11">Up to date per school requirements</span></p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>OBJECTIVE</h2>
+
+                <h3>Vital Signs</h3>
+                <p id="o1"><span id="o2">BP: 110/70 mmHg, HR: 72 bpm, RR: 16/min, Temp: 98.4°F (afebrile), BMI: 22.1 (normal)</span></p>
+
+                <h3>General Appearance</h3>
+                <p id="o3">Well-appearing 16-year-old male in no acute distress; appears self-conscious, avoids eye contact when discussing acne; Tanner stage 4, appropriate pubertal development</p>
+
+                <h3>Targeted Physical Exam (Skin)</h3>
+                <p><strong id="o4">Inspection:</strong></p>
+                <ul id="o5">
+                    <li id="o6">Forehead: Multiple open comedones (blackheads) and closed comedones (whiteheads), 5-6 small erythematous papules</li>
+                    <li>Cheeks (bilateral): Inflammatory papules and pustules, ~15-20 lesions per side with erythematous base</li>
+                    <li>Nasal bridge: Scattered open comedones</li>
+                    <li>Chin: Cluster of papules and pustules, 2 small nodules (3-4mm)</li>
+                    <li id="o7">Perioral area: Spared</li>
+                    <li>Upper back: Scattered comedones and papules, fewer than face</li>
+                </ul>
+
+                <p id="o8"><strong>Palpation:</strong> 2 chin nodules tender to palpation (3-4mm); no warmth; no fluctuance</p>
+
+                <p id="o9"><strong>Pertinent Negatives:</strong> No cystic lesions; no purulence, warmth, or spreading erythema suggesting secondary infection; no truncal nodules or cysts; perioral sparing</p>
+
+                <p><strong>Scarring Assessment:</strong> Mild post-inflammatory hyperpigmentation at sites of resolved lesions; no atrophic scars (ice pick, boxcar, rolling); no hypertrophic or keloid scarring</p>
+
+                <p><strong>Acne Severity Classification:</strong> MODERATE - mixed comedonal and inflammatory lesions, >20 inflammatory lesions on face, 2 small nodules, truncal involvement</p>
+
+                <h3>Screening Physical Exam</h3>
+                <ul>
+                    <li><strong>General:</strong> <span id="o10">Well-appearing, well-nourished adolescent male, BMI 22.1 (normal)</span></li>
+                    <li><strong>HEENT:</strong> <span id="o11">Normocephalic, atraumatic; pupils equal and reactive; oropharynx clear</span></li>
+                    <li><strong>Cardiac:</strong> <span id="o12">Regular rate and rhythm, no murmurs</span></li>
+                    <li><strong>Pulmonary:</strong> <span id="o13">Clear to auscultation bilaterally, no respiratory distress</span></li>
+                    <li><strong>Abdominal:</strong> <span id="o14">Soft, non-tender, non-distended</span></li>
+                    <li><strong>Neurological:</strong> <span id="o15">Alert and oriented, appropriate affect, no focal deficits</span></li>
+                    <li><strong>Skin:</strong> <span id="o16">As described above</span></li>
+                    <li><strong>Musculoskeletal:</strong> <span id="o17">Normal range of motion, no joint swelling</span></li>
+                    <li><strong>Psychiatric:</strong> <span id="o18">Appropriate mood for age; self-conscious about appearance but no overt depression; denies SI/HI</span></li>
+                </ul>
+
+                <p><strong>Labs:</strong> <span id="o19">None obtained (not indicated for uncomplicated moderate acne vulgaris)</span></p>
+                <p><strong>Imaging:</strong> <span id="o20">None obtained (not indicated)</span></p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>ASSESSMENT</h2>
+
+                <h3>Problem Statement</h3>
+                <p id="a1"><span id="a2">16-year-old male with no significant past medical history presenting with progressive moderate acne vulgaris with inflammatory component (papules, pustules, 2 nodules), unresponsive to OTC therapy, with associated psychosocial distress affecting quality of life.</span> <span id="a4">Examination reveals moderate acne with >20 inflammatory lesions per cheek, comedones on forehead/nose, and mild post-inflammatory hyperpigmentation.</span></p>
+
+                <h3>Assessment Reasoning</h3>
+                <p id="a3">The diagnosis of moderate acne vulgaris is supported by the age-appropriate presentation (adolescent male during puberty), classic lesion morphology (comedones, inflammatory papules/pustules, early nodules), distribution pattern typical of acne (face and upper back - sebaceous gland-rich areas), gradual onset and chronic course, and family history (genetic predisposition). The presence of >20 inflammatory lesions, 2 nodules, and truncal involvement classifies this as moderate severity. Failure of OTC treatment over 6 months indicates need for prescription combination therapy. The absence of comedones would suggest rosacea or folliculitis; their presence confirms acne vulgaris.</p>
+
+                <h3>Differential Diagnosis</h3>
+                <ul>
+                    <li><strong>Most Likely:</strong> <span id="a5">Acne Vulgaris (Moderate)</span> - supported by age, classic morphology (comedones, papules, pustules, nodules), typical distribution, family history</li>
+                    <li><strong>Alternative:</strong> <span id="a6">Folliculitis</span> - less likely given presence of comedones, classic acne distribution, not purely follicular-based pattern</li>
+                    <li><strong>Unlikely:</strong> <span id="a7">Rosacea</span> - patient too young (typically >30), comedones present (absent in rosacea), no flushing or telangiectasias</li>
+                    <li><strong>Must Rule Out:</strong> <span id="a8">Steroid-induced acne</span> - ruled out by no steroid or supplement use confirmed, gradual onset, comedones present</li>
+                </ul>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>PLAN</h2>
+
+                <h3 id="a9">Problem #1: Acne Vulgaris (Moderate)</h3>
+                <ul>
+                    <li><strong>M - Measurement:</strong> <span id="a10">>20 inflammatory lesions per cheek; 2 nodules (3-4mm) on chin; comedones on forehead/nose; scattered lesions on upper back; mild PIH; severity: MODERATE</span></li>
+                    <li><strong>E - Evaluation:</strong> Failed OTC benzoyl peroxide and salicylic acid x 6 months with minimal improvement; no prior prescription treatment</li>
+                    <li><strong>A - Assessment:</strong> <span id="a11">Moderate inflammatory acne requiring prescription combination therapy; at risk for scarring given nodular component and picking behavior; significant psychosocial impact requiring attention</span></li>
+                    <li id="a12"><strong>T - Treatment:</strong>
+                        <ul>
+                            <li><strong>Topical Combination Therapy:</strong>
+                                <ul>
+                                    <li>Adapalene 0.1% gel - apply thin layer to ENTIRE face at NIGHT (start every other night x 2 weeks, then nightly as tolerated; expect initial dryness/peeling)</li>
+                                    <li>Benzoyl peroxide 5% gel - apply in MORNING to affected areas (Caution: Can bleach fabrics)</li>
+                                    <li>Clindamycin 1% solution - apply to inflammatory lesions BID (ALWAYS use with benzoyl peroxide to prevent antibiotic resistance)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Oral Antibiotic:</strong> Doxycycline 100mg PO daily x 3 months (take with food and full glass of water; avoid lying down 30 minutes after taking; sun protection essential)</li>
+                            <li><strong>Skincare Recommendations:</strong>
+                                <ul>
+                                    <li>Gentle non-comedogenic cleanser (Cetaphil, CeraVe) - avoid harsh scrubbing</li>
+                                    <li>Non-comedogenic moisturizer for treatment-related dryness</li>
+                                    <li>Daily sunscreen SPF 30+ (especially with retinoid and doxycycline)</li>
+                                    <li>Discontinue current OTC products to avoid over-drying</li>
+                                    <li>STOP picking at lesions - increases scarring and infection risk</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Problem #2: Psychosocial Impact of Acne</h3>
+                <ul>
+                    <li><strong>M - Measurement:</strong> Embarrassment rated 7/10; avoiding social events; declined school dance; spending more time alone</li>
+                    <li><strong>E - Evaluation:</strong> No overt depression; no SI; appropriate for age but self-conscious</li>
+                    <li><strong>A - Assessment:</strong> Significant quality of life impact; warrants attention and monitoring</li>
+                    <li><strong>T - Treatment:</strong> Validation, reassurance, consider counseling referral if not improving with treatment</li>
+                </ul>
+
+                <h3>Diagnostics Ordered</h3>
+                <p>None - clinical diagnosis</p>
+                <p>Consider hormonal workup only if treatment-resistant or signs of hyperandrogenism</p>
+
+                <h3>Patient Education</h3>
+                <p id="a13">Explained acne pathophysiology: Caused by hormones, clogged pores, and bacteria - NOT poor hygiene</p>
+                <ul>
+                    <li>Reassured that acne is very common in teenagers - not his fault</li>
+                    <li>Discussed medication side effects: Dryness, peeling, and sun sensitivity expected with adapalene</li>
+                    <li>Explained initial "purging" (temporary worsening) may occur in first 2-4 weeks</li>
+                    <li>Set realistic timeline: Takes 6-8 weeks to see improvement - patience and consistency are key</li>
+                    <li>Advised not to pop or pick lesions - leads to scarring and infection</li>
+                    <li>Reassured that acne is not contagious</li>
+                    <li>Validated concerns about appearance - acne can significantly impact quality of life at this age</li>
+                    <li>Encouraged continued social activities</li>
+                </ul>
+
+                <h3>Return Precautions</h3>
+                <p id="a14">Return or seek care if:</p>
+                <ul>
+                    <li>Severe new nodules or painful cysts developing</li>
+                    <li>Signs of skin infection (increasing redness, warmth, pus, fever)</li>
+                    <li>Signs of depression or significant mood changes</li>
+                    <li>Severe allergic reaction to medications (rash, swelling, difficulty breathing)</li>
+                    <li>Severe GI symptoms from doxycycline</li>
+                    <li>No improvement after 8-12 weeks of consistent treatment</li>
+                </ul>
+
+                <h3>Follow-Up</h3>
+                <p id="a15">Return in 6-8 weeks to assess treatment response</p>
+
+                <h3>Monitoring Plan</h3>
+                <p id="a16">Assess lesion count and severity at follow-up</p>
+                <ul>
+                    <li>Monitor for medication side effects (dryness, irritation, GI upset)</li>
+                    <li>Screen for mood changes/depression at each visit</li>
+                    <li>If inadequate response at 8-12 weeks:
+                        <ul>
+                            <li>Consider stronger retinoid (tretinoin 0.025%)</li>
+                            <li>Dermatology referral for isotretinoin evaluation if progresses to severe/nodulocystic or develops significant scarring</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mapping of rubric items to their corresponding highlights in the SOAP note
+        const highlightMap = {
+            // Subjective mappings
+            's1': ['s1'],
+            's2': ['s2'],
+            's3': ['s3', 's3-detail'],
+            's4': ['s4', 's4-detail'],
+            's5': ['s5', 's5-detail'],
+            's6': ['s6', 's6-detail'],
+            's7': ['s7', 's7-detail'],
+            's8': ['s8'],
+            's9': ['s9'],
+            's10': ['s10'],
+            's11': ['s11'],
+            's12': ['s12'],
+            's13': ['s13'],
+            's14': ['s14'],
+            's15': ['s15'],
+            's16': ['s16'],
+            's17': ['s17'],
+            's18': ['s18'],
+            's19': ['s19'],
+            's20': ['s20', 's20-neg'],
+            's21': ['s21'],
+
+            // Objective mappings
+            'o1': ['o1'],
+            'o2': ['o2'],
+            'o3': ['o3'],
+            'o4': ['o4'],
+            'o5': ['o5'],
+            'o6': ['o6'],
+            'o7': ['o7'],
+            'o8': ['o8'],
+            'o9': ['o9'],
+            'o10': ['o10'],
+            'o11': ['o11'],
+            'o12': ['o12'],
+            'o13': ['o13'],
+            'o14': ['o14'],
+            'o15': ['o15'],
+            'o16': ['o16'],
+            'o17': ['o17'],
+            'o18': ['o18'],
+            'o19': ['o19'],
+            'o20': ['o20'],
+
+            // Assessment and Plan mappings
+            'a1': ['a1'],
+            'a2': ['a2'],
+            'a3': ['a3'],
+            'a4': ['a4'],
+            'a5': ['a5'],
+            'a6': ['a6'],
+            'a7': ['a7'],
+            'a8': ['a8'],
+            'a9': ['a9'],
+            'a10': ['a10'],
+            'a11': ['a11'],
+            'a12': ['a12'],
+            'a13': ['a13'],
+            'a14': ['a14'],
+            'a15': ['a15'],
+            'a16': ['a16']
+        };
+
+        // Get all rubric items
+        const rubricItems = document.querySelectorAll('.rubric-item');
+
+        // Add click event listeners
+        rubricItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove previous highlights and active states
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                document.querySelectorAll('.rubric-item.active').forEach(el => {
+                    el.classList.remove('active');
+                });
+
+                // Add active state to clicked item
+                this.classList.add('active');
+
+                // Get target IDs to highlight
+                const targetKey = this.getAttribute('data-target');
+                const targetIds = highlightMap[targetKey];
+
+                if (targetIds) {
+                    targetIds.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.classList.add('highlight');
+
+                            // Scroll to the first highlighted element
+                            if (targetIds.indexOf(id) === 0) {
+                                element.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

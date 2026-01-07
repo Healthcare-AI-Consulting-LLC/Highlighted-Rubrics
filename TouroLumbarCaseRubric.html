@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive SOAP Rubric - Acute Lumbar Strain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+
+        .rubric-panel {
+            background: white;
+            border-right: 2px solid #ddd;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .soap-panel {
+            background: white;
+            overflow-y: auto;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 25px 0 15px 0;
+            color: #34495e;
+            border-bottom: 2px solid: #3498db;
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .rubric-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .rubric-item:hover {
+            background: #ecf0f1;
+            border-left-color: #3498db;
+        }
+
+        .rubric-item.active {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #fff59d !important;
+            padding: 2px 4px;
+            border-radius: 3px;
+            animation: pulse 0.5s;
+            box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { background: #fff59d; }
+            50% { background: #ffeb3b; }
+            100% { background: #fff59d; }
+        }
+
+        .soap-section {
+            margin: 30px 0;
+        }
+
+        .patient-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        strong {
+            color: #2c3e50;
+        }
+
+        .section-divider {
+            border-top: 3px solid #e0e0e0;
+            margin: 30px 0;
+        }
+
+        .rubric-category {
+            margin-bottom: 30px;
+        }
+
+        .category-header {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            margin: 20px -20px 15px -20px;
+            font-size: 18px;
+            font-weight: 600;
+            position: sticky;
+            top: 54px;
+            z-index: 5;
+        }
+
+        .rubric-number {
+            display: inline-block;
+            width: 30px;
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Rubric Panel -->
+        <div class="rubric-panel">
+            <h1>SOAP Rubric</h1>
+
+            <div class="rubric-category">
+                <div class="category-header">Subjective</div>
+                <div class="rubric-item" data-target="s1"><span class="rubric-number">1.</span> State the chief complaint</div>
+                <div class="rubric-item" data-target="s2"><span class="rubric-number">2.</span> Construct a coherent HPI narrative</div>
+                <div class="rubric-item" data-target="s3"><span class="rubric-number">3.</span> Document the onset of symptoms</div>
+                <div class="rubric-item" data-target="s4"><span class="rubric-number">4.</span> Document provoking and palliating factors</div>
+                <div class="rubric-item" data-target="s5"><span class="rubric-number">5.</span> Characterize the quality of symptoms</div>
+                <div class="rubric-item" data-target="s6"><span class="rubric-number">6.</span> Document the region and radiation of symptoms</div>
+                <div class="rubric-item" data-target="s7"><span class="rubric-number">7.</span> Document the severity of symptoms</div>
+                <div class="rubric-item" data-target="s8"><span class="rubric-number">8.</span> Document the timing and duration of symptoms</div>
+                <div class="rubric-item" data-target="s20"><span class="rubric-number">9.</span> Document pertinent positives and pertinent negatives</div>
+                <div class="rubric-item" data-target="s19"><span class="rubric-number">10.</span> Document at least 3 organ systems for ROS</div>
+                <div class="rubric-item" data-target="s20"><span class="rubric-number">11.</span> Include clinically relevant ROS findings</div>
+                <div class="rubric-item" data-target="s9"><span class="rubric-number">12.</span> Document surgical history</div>
+                <div class="rubric-item" data-target="s10"><span class="rubric-number">13.</span> Document allergies</div>
+                <div class="rubric-item" data-target="s12"><span class="rubric-number">14.</span> Document current medications</div>
+                <div class="rubric-item" data-target="s13"><span class="rubric-number">15.</span> Document past medical history</div>
+                <div class="rubric-item" data-target="s14"><span class="rubric-number">16.</span> Document relevant lifestyle factors</div>
+                <div class="rubric-item" data-target="s15"><span class="rubric-number">17.</span> Document tobacco use status</div>
+                <div class="rubric-item" data-target="s16"><span class="rubric-number">18.</span> Document alcohol use</div>
+                <div class="rubric-item" data-target="s17"><span class="rubric-number">19.</span> Document drug use</div>
+                <div class="rubric-item" data-target="s18"><span class="rubric-number">20.</span> Document sexual history when relevant</div>
+                <div class="rubric-item" data-target="s21"><span class="rubric-number">21.</span> Document family history</div>
+                <div class="rubric-item" data-target="s11"><span class="rubric-number">22.</span> Include relevant immunization status</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Objective</div>
+                <div class="rubric-item" data-target="o1"><span class="rubric-number">1.</span> Document at least 3 vital signs</div>
+                <div class="rubric-item" data-target="o2"><span class="rubric-number">2.</span> Include plausible and consistent vital sign values</div>
+                <div class="rubric-item" data-target="o3"><span class="rubric-number">3.</span> Document patient's overall appearance and distress level</div>
+                <div class="rubric-item" data-target="o4"><span class="rubric-number">4.</span> Document exam techniques appropriate to chief complaint</div>
+                <div class="rubric-item" data-target="o5"><span class="rubric-number">5.</span> Include systematic examination approach</div>
+                <div class="rubric-item" data-target="o6"><span class="rubric-number">6.</span> Document specific physical exam findings</div>
+                <div class="rubric-item" data-target="o7"><span class="rubric-number">7.</span> Document pertinent negative findings</div>
+                <div class="rubric-item" data-target="o8"><span class="rubric-number">8.</span> Document special maneuvers or tests</div>
+                <div class="rubric-item" data-target="o9"><span class="rubric-number">9.</span> Include exam findings that integrate with history</div>
+                <div class="rubric-item" data-target="o10"><span class="rubric-number">10.</span> Document general examination findings</div>
+                <div class="rubric-item" data-target="o11"><span class="rubric-number">11.</span> Document HEENT examination findings</div>
+                <div class="rubric-item" data-target="o12"><span class="rubric-number">12.</span> Document cardiac examination findings</div>
+                <div class="rubric-item" data-target="o13"><span class="rubric-number">13.</span> Document pulmonary examination findings</div>
+                <div class="rubric-item" data-target="o14"><span class="rubric-number">14.</span> Document abdominal examination findings</div>
+                <div class="rubric-item" data-target="o15"><span class="rubric-number">15.</span> Document neurological examination findings</div>
+                <div class="rubric-item" data-target="o16"><span class="rubric-number">16.</span> Document skin examination findings</div>
+                <div class="rubric-item" data-target="o17"><span class="rubric-number">17.</span> Document musculoskeletal examination findings</div>
+                <div class="rubric-item" data-target="o18"><span class="rubric-number">18.</span> Document psychiatric screening</div>
+                <div class="rubric-item" data-target="o19"><span class="rubric-number">19.</span> Document relevant laboratory results</div>
+                <div class="rubric-item" data-target="o20"><span class="rubric-number">20.</span> Document relevant imaging findings</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Assessment and Plan</div>
+                <div class="rubric-item" data-target="a1"><span class="rubric-number">1.</span> Include synthesis of key history and physical findings</div>
+                <div class="rubric-item" data-target="a2"><span class="rubric-number">2.</span> Include clear problem statement</div>
+                <div class="rubric-item" data-target="a3"><span class="rubric-number">3.</span> Include explicit clinical reasoning</div>
+                <div class="rubric-item" data-target="a4"><span class="rubric-number">4.</span> Reference specific objective data points</div>
+                <div class="rubric-item" data-target="a5"><span class="rubric-number">5.</span> Document the most likely diagnosis</div>
+                <div class="rubric-item" data-target="a6"><span class="rubric-number">6.</span> Document at least one alternative diagnosis</div>
+                <div class="rubric-item" data-target="a7"><span class="rubric-number">7.</span> Document unlikely diagnoses when appropriate</div>
+                <div class="rubric-item" data-target="a8"><span class="rubric-number">8.</span> Document critical must-rule-out diagnoses</div>
+                <div class="rubric-item" data-target="a9"><span class="rubric-number">9.</span> Document at least one active problem clearly</div>
+                <div class="rubric-item" data-target="a10"><span class="rubric-number">10.</span> Document quantifiable measurements</div>
+                <div class="rubric-item" data-target="a11"><span class="rubric-number">11.</span> Include problem-specific assessment</div>
+                <div class="rubric-item" data-target="a12"><span class="rubric-number">12.</span> Include specific, actionable treatment plans</div>
+                <div class="rubric-item" data-target="a13"><span class="rubric-number">13.</span> Document patient education provided</div>
+                <div class="rubric-item" data-target="a14"><span class="rubric-number">14.</span> Document return precautions</div>
+                <div class="rubric-item" data-target="a15"><span class="rubric-number">15.</span> Document follow-up timeframe</div>
+                <div class="rubric-item" data-target="a16"><span class="rubric-number">16.</span> Document monitoring plan for treatment response</div>
+            </div>
+
+            <div class="rubric-category">
+                <div class="category-header">Overall Documentation Quality</div>
+                <div class="rubric-item" data-target="q1"><span class="rubric-number">1.</span> Ensure internal consistency</div>
+                <div class="rubric-item" data-target="q2"><span class="rubric-number">2.</span> Include all core SOAP sections</div>
+                <div class="rubric-item" data-target="q3"><span class="rubric-number">3.</span> Demonstrate clinical reasoning</div>
+                <div class="rubric-item" data-target="q4"><span class="rubric-number">4.</span> Maintain professional quality</div>
+            </div>
+        </div>
+
+        <!-- SOAP Note Panel -->
+        <div class="soap-panel">
+            <h1>Acute Lumbar Strain - SOAP Note</h1>
+
+            <div class="patient-info">
+                <div><strong>Patient:</strong> Marcus Johnson</div>
+                <div><strong>Age/Sex:</strong> 38-year-old Male</div>
+                <div><strong>Date:</strong> [Current Date]</div>
+                <div id="s1"><strong>Chief Complaint:</strong> "My lower back is killing me. I hurt it moving furniture yesterday."</div>
+            </div>
+
+            <div class="soap-section">
+                <h2 id="q2">SUBJECTIVE</h2>
+
+                <h3>History of Present Illness</h3>
+                <p id="s2">38-year-old male warehouse supervisor presents with <span id="s3">acute onset lower back pain that began yesterday afternoon while lifting a heavy dresser at work</span>. He describes the pain as <span id="s5">sharp and stabbing</span>, localized to the <span id="s6">lumbosacral region (slightly right-sided)</span>, currently rating it <span id="s7">5/10 at rest but increasing to 7-8/10 with movement</span>. Pain has been <span id="s8">constant since onset but significantly worsens with bending forward, twisting, lifting, or rising from a chair</span>. He finds relief when <span id="s4">lying supine with knees bent</span>. Tried over-the-counter <span id="s4">ibuprofen this morning with partial relief</span>. Denies <span id="s6">radiation of pain down the legs</span>, numbness, tingling, or weakness in lower extremities. This is the first episode of this severity, though he reports minor back stiffness after long work days in the past that resolved with rest.</p>
+
+                <h3>OLDCARTS</h3>
+                <ul>
+                    <li><strong>O - Onset:</strong> <span id="s3-detail">Started yesterday afternoon (acute onset ~24 hours ago); sudden onset while lifting heavy dresser at work</span></li>
+                    <li><strong>L - Location:</strong> <span id="s6-detail">Lumbosacral region (lower back around belt line), slightly right-sided; does not radiate beyond lower back</span></li>
+                    <li><strong>D - Duration:</strong> <span id="s8-detail">Constant since onset (~24 hours); does not come and go</span></li>
+                    <li><strong>C - Character:</strong> <span id="s5-detail">Sharp and stabbing with movement; occasional muscle spasm sensation when attempting to move</span></li>
+                    <li><strong>A - Aggravating/Alleviating:</strong> <span id="s4-detail">Aggravating: Bending forward, twisting, lifting, rising from chair. Alleviating: Lying supine with knees bent, ibuprofen 400mg (partial relief)</span></li>
+                    <li><strong>R - Radiation:</strong> None - pain stays localized to lower back; does NOT shoot down legs</li>
+                    <li><strong>T - Timing:</strong> Constant presence since yesterday; worse with any movement or activity</li>
+                    <li><strong>S - Severity:</strong> 7-8/10 with movement (bending, twisting); 5/10 at rest when seated</li>
+                    <li><strong>Pertinent Positives:</strong> <span id="s20">Acute mechanical trigger (lifting), localized lumbosacral pain, muscle spasm, worse with activity, relieved by rest, occupational risk factor</span></li>
+                    <li><strong>Pertinent Negatives:</strong> <span id="s20-neg">No leg radiation, no numbness/tingling, no leg weakness, no bowel/bladder dysfunction, no saddle anesthesia, no fever, no weight loss</span></li>
+                </ul>
+
+                <h3>Review of Systems</h3>
+                <ul id="s19">
+                    <li><strong>Constitutional:</strong> Denies fever, chills, night sweats, unintentional weight loss, fatigue</li>
+                    <li><strong>Musculoskeletal:</strong> Lower back pain as described above; no other joint pain, swelling, or stiffness</li>
+                    <li><strong>Neurological:</strong> No leg weakness, no numbness or tingling in legs or feet, no saddle anesthesia, no bowel or bladder dysfunction</li>
+                    <li><strong>Gastrointestinal:</strong> No abdominal pain, no changes in bowel habits</li>
+                </ul>
+
+                <h3>Red Flag Screen (ALL NEGATIVE)</h3>
+                <ul>
+                    <li>Bowel/bladder dysfunction: No</li>
+                    <li>Saddle anesthesia: No</li>
+                    <li>Bilateral leg weakness: No</li>
+                    <li>Fever/chills: No</li>
+                    <li>Unexplained weight loss: No</li>
+                    <li>History of cancer: No</li>
+                    <li>IV drug use: <span id="s17">No</span></li>
+                    <li>Age >50: No (age 38)</li>
+                </ul>
+
+                <h3>SAMPLES</h3>
+                <ul>
+                    <li><strong>S - Surgical History:</strong> <span id="s9">None reported</span></li>
+                    <li><strong>A - Allergies:</strong> <span id="s10">NKDA (no known drug allergies)</span></li>
+                    <li><strong>M - Medications:</strong> <span id="s12">None; tried OTC ibuprofen this morning with partial relief</span></li>
+                    <li><strong>P - Past Medical History:</strong> <span id="s13">No significant medical history reported; similar but milder back stiffness 2 years ago that resolved with rest</span></li>
+                    <li><strong>L - Lifestyle:</strong> <span id="s14">Works as warehouse supervisor - frequent standing/walking, occasional heavy lifting; plays basketball weekly; otherwise healthy and active</span></li>
+                    <li><strong>E - Events:</strong> Acute injury yesterday while helping with heavy lifting due to short staffing; needs to return to work but currently unable to perform duties</li>
+                    <li><strong>S - Social History:</strong>
+                        <ul>
+                            <li>Occupation: <span id="s14-occ">Warehouse supervisor (high physical demand)</span></li>
+                            <li>Tobacco: <span id="s15">Not specified</span></li>
+                            <li>Alcohol: <span id="s16">Not specified</span></li>
+                            <li>Drugs: Denies IV drug use</li>
+                            <li>Sexual History: <span id="s18">Not clinically relevant to presentation</span></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <p><strong>Family History:</strong> <span id="s21">Not specified; non-contributory to acute presentation</span></p>
+                <p><strong>Immunizations:</strong> <span id="s11">Not specified</span></p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>OBJECTIVE</h2>
+
+                <h3>Vital Signs</h3>
+                <p id="o1"><span id="o2">BP: 134/86 mmHg, HR: 82 bpm (regular), RR: 16/min, Temp: 98.4°F (oral) - afebrile, SpO2: 98% on room air, Pain: 5/10 at rest, 7-8/10 with movement, BMI: 28.4 kg/m² (overweight)</span></p>
+
+                <h3>General Appearance</h3>
+                <p id="o3">Well-developed, well-nourished 38-year-old male in mild discomfort when seated. Alert and oriented. Moves cautiously due to pain. No acute distress when at rest.</p>
+
+                <h3>Targeted Physical Exam - Musculoskeletal (Spine)</h3>
+                <p id="o4"><strong>Inspection:</strong></p>
+                <ul id="o5">
+                    <li id="o6">Normal thoracic and lumbar spinal curvature</li>
+                    <li id="o7">No visible deformities, scoliosis, or skin changes</li>
+                    <li>No step-off deformity</li>
+                    <li>Gait: Antalgic (favoring movement to avoid pain) but functional; able to walk on heels and toes</li>
+                </ul>
+
+                <p><strong>Palpation:</strong></p>
+                <ul>
+                    <li id="o6-palp"><strong>Significant tenderness to palpation</strong> over lumbosacral paraspinal muscles bilaterally (L4-S1 level), more prominent on right side</li>
+                    <li><strong>Palpable bilateral paraspinal muscle spasm</strong> in lower lumbar region</li>
+                    <li id="o7-palp">No midline spinous process tenderness (no bony tenderness)</li>
+                    <li>No step-off between vertebrae</li>
+                </ul>
+
+                <p><strong>Range of Motion:</strong></p>
+                <ul id="o9">
+                    <li><strong>Lumbar flexion:</strong> Limited to approximately 30 degrees (normal 90°) due to pain</li>
+                    <li><strong>Lumbar extension:</strong> Limited by pain (~50% of normal)</li>
+                    <li><strong>Lateral bending:</strong> Limited bilaterally due to pain</li>
+                    <li><strong>Rotation:</strong> Limited bilaterally due to pain</li>
+                </ul>
+
+                <p id="o8"><strong>Special Tests:</strong></p>
+                <ul>
+                    <li><strong>Straight Leg Raise (SLR):</strong> Negative bilaterally - no radicular pain with leg elevation to 80 degrees on each side</li>
+                    <li><strong>Crossed SLR:</strong> Negative</li>
+                    <li><strong>FABER test:</strong> Negative (no sacroiliac joint pain)</li>
+                </ul>
+
+                <h3>Neurological Examination (Lower Extremities)</h3>
+                <p id="o15"><strong>Motor Strength (graded 0-5):</strong></p>
+                <ul>
+                    <li>Hip flexion (L1-L2): 5/5 bilaterally</li>
+                    <li>Knee extension (L3-L4): 5/5 bilaterally</li>
+                    <li>Ankle dorsiflexion (L4-L5): 5/5 bilaterally</li>
+                    <li>Great toe extension (L5): 5/5 bilaterally</li>
+                    <li>Ankle plantarflexion (S1): 5/5 bilaterally</li>
+                </ul>
+
+                <p><strong>Sensory:</strong></p>
+                <ul>
+                    <li>Intact to light touch throughout L1-S1 dermatomes bilaterally</li>
+                    <li><strong>No saddle anesthesia</strong> (critical negative finding)</li>
+                </ul>
+
+                <p><strong>Reflexes (graded 0-4):</strong></p>
+                <ul>
+                    <li>Patellar (L4): 2+ symmetric bilaterally</li>
+                    <li>Achilles (S1): 2+ symmetric bilaterally</li>
+                </ul>
+
+                <h3>Screening Physical Exam</h3>
+                <ul>
+                    <li><strong>General:</strong> <span id="o10">Well-appearing, well-nourished male, BMI 28.4</span></li>
+                    <li><strong>HEENT:</strong> <span id="o11">Normocephalic, atraumatic; pupils equal, round, reactive to light; oropharynx clear</span></li>
+                    <li><strong>Cardiac:</strong> <span id="o12">Regular rate and rhythm; no murmurs, rubs, or gallops</span></li>
+                    <li><strong>Pulmonary:</strong> <span id="o13">Clear to auscultation bilaterally; no wheezes, rales, or rhonchi</span></li>
+                    <li><strong>Abdominal:</strong> <span id="o14">Soft, non-tender, non-distended; no masses; bowel sounds present</span></li>
+                    <li><strong>Skin:</strong> <span id="o16">Warm, dry; no rashes; normal turgor</span></li>
+                    <li><strong>Musculoskeletal:</strong> <span id="o17">Spine exam as detailed above</span></li>
+                    <li><strong>Psychiatric:</strong> <span id="o18">Appropriate affect; frustrated about pain and work limitations but no signs of depression</span></li>
+                </ul>
+
+                <p><strong>Labs:</strong> <span id="o19">None obtained (not indicated for uncomplicated mechanical low back pain)</span></p>
+                <p><strong>Imaging:</strong> <span id="o20">None obtained (not indicated per ACP 2017 guidelines - no red flags present)</span></p>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>ASSESSMENT AND PLAN</h2>
+
+                <h3>Problem Statement</h3>
+                <p id="a1"><span id="a2">38-year-old male with no significant past medical history presenting with acute lumbar strain (mechanical low back pain) following occupational lifting injury, characterized by localized lumbosacral pain with muscle spasm, no radiculopathy, and no red flag symptoms.</span> <span id="a4">Examination reveals significant paraspinal muscle spasm and tenderness at L4-S1 with limited range of motion due to pain, but notably normal neurological examination (5/5 strength all groups, intact sensation, 2+ reflexes symmetric) and negative straight leg raise bilaterally.</span></p>
+
+                <h3>Assessment Reasoning</h3>
+                <p id="a3">The diagnosis of acute lumbar strain is strongly supported by: (1) Acute mechanical trigger - clear history of heavy lifting with sudden onset pain; (2) Pain pattern - localized lumbosacral pain that worsens with activity and improves with rest (classic mechanical pain); (3) Physical exam findings - paraspinal muscle tenderness and spasm (L4-S1), limited ROM due to pain; (4) Negative radiculopathy screening - no leg radiation, negative SLR, normal neurological exam rules out nerve root compression; (5) Negative red flags - no bowel/bladder dysfunction, no saddle anesthesia, no leg weakness, no fever, no weight loss, age <50; (6) Occupational risk factor - warehouse work is well-established risk for mechanical low back pain.</p>
+
+                <h3>Differential Diagnosis</h3>
+                <ul id="q3">
+                    <li><strong>Most Likely:</strong> <span id="a5">Acute Lumbar Strain (Mechanical Low Back Pain)</span> - Supported by acute mechanical trigger, localized lumbosacral pain without radiation, paraspinal muscle spasm on exam, mechanical pain pattern, negative SLR, normal neuro exam, no red flags</li>
+                    <li><strong>Alternative:</strong> <span id="a6">Lumbar Radiculopathy (Sciatica)</span> - Less likely; ruled out by absence of leg radiation below knee, negative straight leg raise test, completely normal neurological examination</li>
+                    <li><strong>Unlikely:</strong> <span id="a7">Lumbar Spinal Stenosis</span> - Very unlikely given acute onset (stenosis typically chronic/progressive), age <50, no neurogenic claudication pattern</li>
+                    <li><strong>Must Rule Out:</strong> <span id="a8">Cauda Equina Syndrome</span> - Ruled out by negative red flag screen: no bowel/bladder dysfunction, no saddle anesthesia, no bilateral leg weakness, normal neurological exam</li>
+                    <li><strong>Must Rule Out:</strong> Spinal Epidural Abscess - Ruled out by absence of fever, no IV drug use, no systemic symptoms</li>
+                    <li><strong>Must Rule Out:</strong> Vertebral Compression Fracture - Ruled out by age <50, mechanism not consistent with fracture, no midline bony tenderness</li>
+                </ul>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="soap-section">
+                <h2>PLAN</h2>
+
+                <h3 id="a9">Problem #1: Acute Lumbar Strain (Mechanical Low Back Pain)</h3>
+                <ul>
+                    <li><strong>M - Measurement:</strong> <span id="a10">Pain severity: 7-8/10 with movement, 5/10 at rest; Paraspinal muscle spasm L4-S1; Lumbar flexion limited to 30°; Unable to perform normal work duties</span></li>
+                    <li><strong>E - Evaluation:</strong> Acute presentation (~24 hours); Normal neuro exam rules out radiculopathy; Negative red flags; Tried OTC ibuprofen with partial relief only</li>
+                    <li><strong>A - Assessment:</strong> <span id="a11">Uncomplicated acute lumbar muscle strain requiring conservative management; Expected natural history: 90% resolve within 4-6 weeks; Low risk for chronicity given age <40, but has risk factors (previous episode, occupational exposure, BMI 28.4)</span></li>
+                    <li id="a12"><strong>T - Treatment:</strong>
+                        <ul>
+                            <li><strong>Pharmacologic Management:</strong>
+                                <ul>
+                                    <li>Ibuprofen 600 mg PO TID-QID PRN with food (first-line per ACP 2017; max 2400 mg/24 hours; duration 7-14 days PRN)</li>
+                                    <li>Acetaminophen 650-1000 mg PO TID-QID PRN if NSAIDs contraindicated (max 3000 mg/day)</li>
+                                    <li>AVOID opioids - NOT indicated per CDC 2022 guideline</li>
+                                </ul>
+                            </li>
+                            <li><strong>Non-Pharmacologic Management:</strong>
+                                <ul>
+                                    <li>STAY ACTIVE - AVOID BED REST (bed rest >2 days is HARMFUL and delays recovery; encourage normal activities as tolerated)</li>
+                                    <li>Work restrictions: Light duty for 2 weeks - no lifting >20 lbs, avoid bending/twisting</li>
+                                    <li>Ice/Heat: Ice first 48 hours, heat after 48 hours</li>
+                                    <li>Physical Therapy: Refer if no improvement at 4-6 weeks</li>
+                                </ul>
+                            </li>
+                            <li><strong>Proper Body Mechanics:</strong>
+                                <ul>
+                                    <li>Bend at knees, not waist when lifting</li>
+                                    <li>Keep objects close to body</li>
+                                    <li>Avoid twisting while lifting</li>
+                                    <li>Use mechanical aids when available</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3>Diagnostics Ordered</h3>
+                <p><strong>None</strong> - Clinical diagnosis of acute lumbar strain</p>
+                <p><strong>Imaging NOT indicated:</strong> Per ACP 2017 guidelines, routine imaging (X-ray or MRI) is NOT recommended for acute low back pain without red flags. Imaging does NOT improve outcomes and 90% of cases resolve within 6 weeks. Will consider imaging if symptoms persist >6 weeks or red flags develop.</p>
+
+                <h3>Patient Education</h3>
+                <p id="a13">Explained acute lumbar strain pathophysiology: Microscopic tears in paraspinal muscles from lifting injury causing inflammation and muscle spasm. Reassured this is common, self-limited condition - NOT a serious spinal injury.</p>
+                <ul>
+                    <li><strong>Natural history:</strong> Most acute low back pain improves within 4-6 weeks; 90% resolve with conservative care</li>
+                    <li><strong>Why no imaging:</strong> X-rays and MRI do not improve outcomes; imaging only needed if red flags develop or no improvement after 6 weeks</li>
+                    <li><strong>CRITICAL:</strong> Staying active speeds recovery - bed rest is HARMFUL</li>
+                    <li><strong>Timeline:</strong> Expect 50% improvement by 2 weeks; full recovery by 4-6 weeks</li>
+                </ul>
+
+                <h3>Return Precautions</h3>
+                <p id="a14">Return to clinic or call immediately if:</p>
+                <ul>
+                    <li><strong>Loss of bowel or bladder control</strong> → GO TO ED IMMEDIATELY (cauda equina emergency)</li>
+                    <li><strong>Numbness in groin/buttocks area</strong> → GO TO ED IMMEDIATELY</li>
+                    <li><strong>New or worsening leg weakness</strong> → CALL CLINIC IMMEDIATELY</li>
+                    <li><strong>Pain radiating down leg below knee</strong> → CALL CLINIC</li>
+                    <li><strong>Fever, chills</strong> → CALL CLINIC</li>
+                    <li><strong>Severe worsening pain</strong> → CALL CLINIC</li>
+                    <li><strong>No improvement after 2 weeks</strong> → CALL CLINIC</li>
+                </ul>
+
+                <h3>Follow-Up</h3>
+                <p id="a15"><strong>Return in 2-4 weeks</strong> or sooner if not improving or symptoms worsen</p>
+
+                <h3>Monitoring Plan</h3>
+                <p id="a16">At follow-up visit (2-4 weeks):</p>
+                <ul>
+                    <li>Reassess pain level and functional status</li>
+                    <li>Monitor ROM and muscle spasm</li>
+                    <li>Evaluate response to treatment</li>
+                    <li><strong>If improving:</strong> Continue current management, progress activity</li>
+                    <li><strong>If not improving:</strong> Consider PT referral, re-evaluate for red flags, consider imaging if >6 weeks, consider spine specialist referral</li>
+                </ul>
+
+                <p id="q1"><strong>Return-to-work plan:</strong> Week 1-2: Light duty (no lifting >20 lbs); Week 3-4: Gradual increase; Week 4-6: Full duty clearance if pain resolved</p>
+            </div>
+
+            <div style="margin-top: 40px; padding: 20px; background: #e8f5e9; border-left: 4px solid #4caf50; border-radius: 4px;" id="q4">
+                <h3>Documentation Quality Check</h3>
+                <ul>
+                    <li>✓ All core SOAP sections included</li>
+                    <li>✓ Internal consistency between history, exam, and assessment</li>
+                    <li>✓ Clinical reasoning demonstrated</li>
+                    <li>✓ Evidence-based management (ACP 2017, CDC 2022)</li>
+                    <li>✓ Professional terminology with clear documentation</li>
+                    <li>✓ Patient safety prioritized</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mapping of rubric items to their corresponding highlights in the SOAP note
+        const highlightMap = {
+            // Subjective mappings
+            's1': ['s1'],
+            's2': ['s2'],
+            's3': ['s3', 's3-detail'],
+            's4': ['s4', 's4-detail'],
+            's5': ['s5', 's5-detail'],
+            's6': ['s6', 's6-detail'],
+            's7': ['s7'],
+            's8': ['s8', 's8-detail'],
+            's9': ['s9'],
+            's10': ['s10'],
+            's11': ['s11'],
+            's12': ['s12'],
+            's13': ['s13'],
+            's14': ['s14', 's14-occ'],
+            's15': ['s15'],
+            's16': ['s16'],
+            's17': ['s17'],
+            's18': ['s18'],
+            's19': ['s19'],
+            's20': ['s20', 's20-neg'],
+            's21': ['s21'],
+
+            // Objective mappings
+            'o1': ['o1'],
+            'o2': ['o2'],
+            'o3': ['o3'],
+            'o4': ['o4'],
+            'o5': ['o5'],
+            'o6': ['o6', 'o6-palp'],
+            'o7': ['o7', 'o7-palp'],
+            'o8': ['o8'],
+            'o9': ['o9'],
+            'o10': ['o10'],
+            'o11': ['o11'],
+            'o12': ['o12'],
+            'o13': ['o13'],
+            'o14': ['o14'],
+            'o15': ['o15'],
+            'o16': ['o16'],
+            'o17': ['o17'],
+            'o18': ['o18'],
+            'o19': ['o19'],
+            'o20': ['o20'],
+
+            // Assessment and Plan mappings
+            'a1': ['a1'],
+            'a2': ['a2'],
+            'a3': ['a3'],
+            'a4': ['a4'],
+            'a5': ['a5'],
+            'a6': ['a6'],
+            'a7': ['a7'],
+            'a8': ['a8'],
+            'a9': ['a9'],
+            'a10': ['a10'],
+            'a11': ['a11'],
+            'a12': ['a12'],
+            'a13': ['a13'],
+            'a14': ['a14'],
+            'a15': ['a15'],
+            'a16': ['a16'],
+
+            // Quality mappings
+            'q1': ['q1'],
+            'q2': ['q2'],
+            'q3': ['q3'],
+            'q4': ['q4']
+        };
+
+        // Get all rubric items
+        const rubricItems = document.querySelectorAll('.rubric-item');
+
+        // Add click event listeners
+        rubricItems.forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove previous highlights and active states
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                document.querySelectorAll('.rubric-item.active').forEach(el => {
+                    el.classList.remove('active');
+                });
+
+                // Add active state to clicked item
+                this.classList.add('active');
+
+                // Get target IDs to highlight
+                const targetKey = this.getAttribute('data-target');
+                const targetIds = highlightMap[targetKey];
+
+                if (targetIds) {
+                    targetIds.forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.classList.add('highlight');
+
+                            // Scroll to the first highlighted element
+                            if (targetIds.indexOf(id) === 0) {
+                                element.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'center'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
